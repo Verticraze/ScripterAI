@@ -75,6 +75,13 @@ def ask(q: str, k: int = 5):
     qv = emb_model.encode([q], normalize_embeddings=True).astype("float32")
     D, I = index.search(qv, min(k, len(chunks)))
     ctx = "\n----\n".join(chunks[i] for i in I[0])
+
+    # Limit context length (Flan-T5 max input ~512 tokens)
+    MAX_CHARS = 1200   # ~400 tokens (safe margin)
+    if len(ctx) > MAX_CHARS:
+        ctx = ctx[:MAX_CHARS]
+
     prompt = f"Context:\n{ctx}\n\nQuestion: {q}\nAnswer concisely for a screenwriter:"
-    out = gen(prompt, max_length=256)[0]["generated_text"]
+
+    out = gen(prompt, max_new_tokens=256, truncation=True)[0]["generated_text"]
     return {"answer": out, "contexts": [chunks[i] for i in I[0].tolist()]}

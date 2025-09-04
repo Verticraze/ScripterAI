@@ -1,1 +1,8 @@
-fastapi uvicorn[standard] pydantic==1.10.13 pypdf python-multipart faiss-cpu sentence-transformers transformers
+fastapi 
+uvicorn[standard] 
+pydantic
+pypdf
+python-multipart
+faiss-cpu 
+sentence-transformers 
+transformers
